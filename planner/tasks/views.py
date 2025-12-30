@@ -24,6 +24,9 @@ def create(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
+            if not task.due_date:
+                from django.utils import timezone
+                task.due_date = timezone.now()
             task.save()
             messages.success(request, 'Task created successfully!')
             return redirect('tasks')
@@ -72,3 +75,8 @@ def toggle(request, pk):
     status = "completed" if task.completed else "marked as pending"
     messages.success(request, f'Task {status}!')
     return redirect("tasks")
+
+@login_required
+def profile(request):
+    return render(request, 'accounts/profile.html')
+    

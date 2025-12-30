@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
     title = models.CharField(max_length=200)
     description = models.TextField()
-    due_date = models.DateField()
+    due_date = models.DateField(default=timezone.now)
     priority = models.CharField(
         max_length = 10,
         choices = [("Low", "Low"), ("Medium", "Medium"), ("High", "High")]
