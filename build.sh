@@ -6,3 +6,4 @@ pip install -r requirements.txt
 
 python planner/manage.py collectstatic --no-input
 python planner/manage.py migrate
+python planner/manage.py createsu
