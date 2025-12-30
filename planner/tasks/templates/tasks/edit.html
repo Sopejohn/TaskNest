@@ -1,0 +1,24 @@
+{% extends "accounts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="main-container" style="max-width: 600px;">
+
+  <div class="topbar justify-content-center">
+    <h1 class="page-title">Edit Task</h1>
+  </div>
+
+  <div class="card-premium p-4">
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{% url 'tasks' %}" class="btn btn-outline-primary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

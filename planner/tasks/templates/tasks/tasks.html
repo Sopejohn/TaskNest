@@ -1,0 +1,82 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+<div class="main-container">
+
+  <div class="topbar">
+    <h1 class="page-title">My Tasks</h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-primary" href="{% url 'profile' %}">
+        <i class="bi bi-person-circle"></i> Profile
+      </a>
+      <a class="btn btn-primary" href="{% url 'create' %}">
+        <i class="bi bi-plus-lg"></i> Create Task
+      </a>
+    </div>
+  </div>
+
+  {% if tasks_count == 0 %}
+  <div class="empty-state">
+    <i class="bi bi-clipboard-check empty-icon"></i>
+    <h3>No tasks yet</h3>
+    <p>Get started by creating your first task above.</p>
+  </div>
+  {% else %}
+  <div class="task-grid">
+    {% for task in tasks %}
+    <div class="task-card {% if task.completed %}completed{% endif %}">
+
+      <div class="task-header">
+        <h2 class="task-title">{{ task.title }}</h2>
+        <span class="priority-badge priority-{{ task.priority|lower }}">
+          {{ task.priority }}
+        </span>
+      </div>
+
+      <div class="task-body">
+        {% if task.description %}
+        {{ task.description|truncatechars:120 }}
+        {% else %}
+        <em class="text-muted">No description</em>
+        {% endif %}
+      </div>
+
+      <div class="task-footer">
+        <span class="task-date">
+          <i class="bi bi-calendar3 me-1"></i>
+          {{ task.created_at|date:"M j" }}
+        </span>
+
+        <div class="task-actions">
+          <!-- Toggle complete -->
+          <form method="post" action="{% url 'toggle' task.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="action-btn"
+              title="{% if task.completed %}Mark as pending{% else %}Mark as completed{% endif %}">
+              {% if task.completed %}
+              <i class="bi bi-arrow-counterclockwise"></i>
+              {% else %}
+              <i class="bi bi-check-circle"></i>
+              {% endif %}
+            </button>
+          </form>
+
+          <!-- Edit -->
+          <a class="action-btn" href="{% url 'edit' task.id %}" title="Edit">
+            <i class="bi bi-pencil"></i>
+          </a>
+
+          <!-- Delete -->
+          <a class="action-btn delete" href="{% url 'delete' task.id %}" title="Delete">
+            <i class="bi bi-trash"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
