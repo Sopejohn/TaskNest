@@ -93,8 +93,15 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+if 'RENDER' in os.environ:
+    if 'DATABASE_URL' not in os.environ:
+        raise ValueError("DATABASE_URL is not set. You must configure a database on Render to prevent data loss.")
+    db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    DATABASES['default'].update(db_from_env)
+else:
+    # Local development fallback
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'].update(db_from_env)
 
 
 # Password validation
